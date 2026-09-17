@@ -1,38 +1,39 @@
-﻿# 🚀 Auto_Mail
+# 🚀 Auto_Mail
 
 Automated, personalized bulk email dispatcher powered by Python and Gmail SMTP. 
 
-Designed for founders, marketers, and developers who need reliable, personalized outreach directly through their own Gmail account without expensive third-party SaaS tools.
+Built for developers, job seekers, and founders who need reliable, personalized outreach directly through their own Gmail account without expensive third-party SaaS subscriptions.
 
 ---
 
 ## ✨ Features
 
-- **Zero External Dependencies**: Built entirely with Python's standard library (smtplib, email, ssl, etc.) — no pip install required.
-- **Rich HTML & Plaintext Templates**: Supports beautiful responsive HTML emails with automatic variable replacement (e.g. {name}, {custom_note}).
-- **Multiple Recipient Formats**: Works seamlessly with .txt (one per line, comma-separated) and .csv files.
-- **Safe Dry-Run Preview**: Preview formatted emails and subjects in the terminal before sending a single message.
-- **Single Test Mode**: Test email rendering and inbox deliverability with --test user@example.com.
+- **Zero External Dependencies**: Built entirely with Python's standard library (`smtplib`, `email`, `ssl`, etc.) — no `pip install` required.
+- **Dual HTML & Plaintext Templates**: Supports responsive HTML emails ([template.html](template.html)) with a clean plain-text fallback ([template.txt](template.txt)).
+- **Dynamic Variable Substitution**: Automatically personalizes each email with `{name}`, `{company_phrase}`, `{sender_name}`, `{contact_number}`, and `{sender_email}`.
+- **Automatic Resume & File Attachment**: Seamlessly attaches your PDF resume ([Bashetty-Sanjay.pdf](Bashetty-Sanjay.pdf)) or custom documents using standard RFC-compliant MIME packaging.
+- **Multiple Recipient Formats**: Works out-of-the-box with both `.txt` (comma-separated: `email, Name, Company`) and `.csv` files.
+- **Safe Dry-Run Preview**: Preview formatted emails, subjects, and attachment status in your terminal before sending.
+- **Single Test Mode**: Verify inbox deliverability and attachment integrity with `--test your_email@gmail.com`.
 - **Rate-Limiting & Auto-Reconnect**: Configurable delays between sends to respect Gmail sending limits, with automatic reconnect upon connection drops.
-- **Audit Logging**: Automatically records every dispatched email's timestamp, status (SUCCESS / FAILED), and error details in sent_log.csv.
-- **Inline Images & Attachments**: Supports CID-embedded logos and file attachments (e.g., presentations, PDFs).
+- **Audit Logging**: Automatically records every dispatched email's timestamp, status (`SUCCESS` / `FAILED`), and error details in `sent_log.csv`.
 
 ---
 
 ## 📁 Repository Structure
 
-`	ext
+```text
 Auto_Mail/
 ├── send_bulk.py          # Core bulk dispatch engine
 ├── template.html         # Responsive HTML email template
-├── recipients.txt        # Recipient list (txt or csv)
+├── template.txt          # Clean plain-text fallback template
+├── Bashetty-Sanjay.pdf   # Resume PDF attachment
+├── recipients.txt        # Recipient list (txt format: email, name, company)
+├── recipients.csv        # Recipient list (csv format: email, name, company, ...)
 ├── .env.example          # Environment variables template
 ├── .gitignore            # Git exclusion rules (protects credentials & logs)
-├── fizi_logo.png         # Brand logo asset
-├── FIZI ppt fin.pptx     # Presentation attachment
-├── upload_logo.py        # Cloudinary image upload utility
 └── README.md             # Documentation
-`
+```
 
 ---
 
@@ -46,50 +47,58 @@ Auto_Mail/
 1. Navigate to [Google Account Security](https://myaccount.google.com/security).
 2. Under **How you sign in to Google**, ensure **2-Step Verification** is turned on.
 3. Search for **App passwords** or go to [App passwords](https://myaccount.google.com/apppasswords).
-4. Enter an app name (e.g., Auto Mail) and click **Create**.
-5. Copy the generated 16-character password (e.g., xxxx xxxx xxxx xxxx).
+4. Enter an app name (e.g., `Auto Mail`) and click **Create**.
+5. Copy the generated 16-character password (e.g., `xxxx xxxx xxxx xxxx`).
 
 ### 3. Setup Environment Variables
-Copy .env.example to .env:
-`powershell
+Copy `.env.example` to `.env`:
+```powershell
 cp .env.example .env
-`
-Open .env and fill in your details:
-`env
+```
+Open `.env` and fill in your details:
+```env
+# Your Gmail address
 GMAIL_USER=your_email@gmail.com
-GMAIL_APP_PASSWORD=your_16_char_app_password
-SENDER_NAME=Your Name or Team
-EMAIL_SUBJECT=Connecting with you, {name}
-`
 
-> ⚠️ **Security Notice**: .env and sent_log.csv are included in .gitignore to prevent leaking credentials or private recipient logs. Never remove them from .gitignore.
+# Your 16-character Google App Password
+GMAIL_APP_PASSWORD=xxxx xxxx xxxx xxxx
+
+# Name shown to recipients as the sender
+SENDER_NAME=Sanjay Bashetty
+
+# Sender contact email displayed in signature
+SENDER_EMAIL=bashettysanjay@gmail.com
+
+# Sender contact phone number displayed in signature
+CONTACT_NUMBER=+91 9866347550
+
+# Default Email Subject (supports {name} placeholder)
+EMAIL_SUBJECT=Inquiry About Entry-Level Opportunities
+```
+
+> ⚠️ **Security Notice**: `.env` and `sent_log.csv` are included in `.gitignore` to prevent leaking private credentials or recipient logs. Never remove them from `.gitignore`.
 
 ---
 
 ## 👥 Managing Recipients
 
-Add your recipient list to ecipients.txt. Supported formats:
+### Option A: `recipients.txt` (Recommended)
+Add your recipients (one per line):
+```text
+# Format: email, First Name, Company
+akanksha.puri@sourcefuse.com, Akanksha, SourceFuse Technologies
+akanksha.sogani@perennialsys.com, Akanksha, Perennial Systems
+recruiter@techcorp.com, Sarah, TechCorp
+```
+*(If name or company is omitted, it automatically falls back to `Dear Hiring Team,` and `in your organization`).*
 
-`	ext
-# Simple email
-john@example.com
-
-# Email with Name
-sarah@example.com, Sarah
-
-# Email, Name, and Custom Note
-alex@example.com, Alex, Loved your keynote at the summit!
-
-# RFC format
-"David Miller" <david@example.com>
-`
-
-Alternatively, provide any .csv file with an email header (plus optional columns like 
-ame, company, etc.):
-`csv
+### Option B: `recipients.csv`
+Provide a standard `.csv` file:
+```csv
 email,name,company
-alex@example.com,Alex,Acme Corp
-`
+akanksha.puri@sourcefuse.com,Akanksha,SourceFuse Technologies
+akanksha.sogani@perennialsys.com,Akanksha,Perennial Systems
+```
 
 ---
 
@@ -97,21 +106,26 @@ alex@example.com,Alex,Acme Corp
 
 ### 1. Dry Run (Preview without sending)
 Preview the personalized subject and body for the first recipients in your terminal:
-`powershell
+```powershell
 python send_bulk.py --dry-run
-`
+```
 
 ### 2. Send a Single Test Email
-Verify formatting and check spam folder placement before broadcasting:
-`powershell
+Verify formatting and check inbox placement before broadcasting:
+```powershell
 python send_bulk.py --test your_personal_email@gmail.com
-`
+```
 
 ### 3. Dispatch Bulk Emails
-`powershell
+```powershell
 python send_bulk.py
-`
+```
 *You will be prompted with a confirmation summary (sender, count, delay, attachment) before dispatch starts.*
+
+### 4. Skip Confirmation Prompt
+```powershell
+python send_bulk.py --yes
+```
 
 ---
 
@@ -119,31 +133,32 @@ python send_bulk.py
 
 | Flag | Description | Default |
 |------|-------------|---------|
-| --dry-run | Preview messages in console without sending | False |
-| --test <email> | Send a single test email | None |
-| --file <path> | Path to custom .txt or .csv recipient file | ecipients.txt |
-| --delay <seconds> | Sleep delay between consecutive emails | 2.0 |
-| --subject "<text>" | Override default email subject (supports {name}) | From .env |
-| --attach "<path>" | Path to custom file attachment (PDF, PPTX, etc.) | Default deck if present |
+| `--dry-run` | Preview messages in console without sending | `False` |
+| `--test <email>` | Send a single test email to the specified address | `None` |
+| `--file <path>` | Path to custom `.txt` or `.csv` recipient file | `recipients.txt` |
+| `--delay <seconds>` | Sleep delay between consecutive sends | `2.0` |
+| `--subject "<text>"` | Override default email subject | From `.env` |
+| `--attach "<path>"` | Path to custom file attachment | `Bashetty-Sanjay.pdf` |
+| `--yes`, `-y` | Skip confirmation prompt and start dispatch immediately | `False` |
 
 ### Example with Custom Options:
-`powershell
-python send_bulk.py --file investors.csv --delay 3.5 --subject "Quick question for {name}" --attach "reports/q3_summary.pdf"
-`
+```powershell
+python send_bulk.py --file leads.csv --delay 3.0 --subject "Inquiry - Sanjay Bashetty" --attach "Bashetty-Sanjay.pdf"
+```
 
 ---
 
 ## 📊 Delivery Logs
 
-After each run, status logs are appended to sent_log.csv:
-`csv
+After each run, status logs are recorded in `sent_log.csv`:
+```csv
 Timestamp,Recipient,Status,Details
-2026-09-18 00:35:10,user@example.com,SUCCESS,
-2026-09-18 00:35:14,invalid-email,FAILED,550 User not found
-`
+2026-09-18 01:16:01,user@example.com,SUCCESS,Test email
+2026-09-18 01:32:19,akanksha.puri@sourcefuse.com,SUCCESS,
+```
 
 ---
 
 ## 📄 License
 
-MIT License. Feel free to modify and adapt for your own workflows!
+MIT License.

@@ -1,0 +1,19 @@
+Dear {name},
+
+I hope this email finds you well.
+
+I'm {sender_name}, seeking an entry-level Software Development role {company_phrase}.
+
+As a Computer Science student with a strong foundation in problem-solving and core programming, I have developed an active interest in web development and artificial intelligence. Having built and deployed production-ready applications, I am eager to build scalable software, contribute to impactful solutions, and grow as a reliable professional within your organization.
+
+Please find my resume attached for your review and consideration. I would welcome the opportunity to discuss how my skills and background can add value to your engineering team.
+
+Thank you for your time and consideration.
+
+Best regards,
+{sender_name}
+{contact_number}
+{sender_email}
+Portfolio: https://sanjay-bashetty-portfolio.vercel.app/
+GitHub: https://github.com/bashetty-sanjay
+LinkedIn: https://www.linkedin.com/in/sanjay-bashetty

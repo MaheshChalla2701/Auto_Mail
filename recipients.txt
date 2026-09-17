@@ -1,10 +1,66 @@
-﻿# Recipients list
-# Supported formats (one per line):
-#   1. email@example.com
-#   2. email@example.com, First Name
-#   3. email@example.com, First Name, Custom Note
-#   4. First Name <email@example.com>
-#
-# Lines starting with # and empty lines are ignored.
-# Add your recipient emails below:
-
+# Email, First Name, Company
+akanksha.puri@sourcefuse.com, Akanksha, SourceFuse Technologies
+akanksha.sogani@perennialsys.com, Akanksha, Perennial Systems
+akhil@ibhubs.co, Akhil, iB Hubs
+akhila@estuate.com, Akhila, Estuate
+akram.mohammad@colruytgroup.com, Akram, Colruyt India
+akriti@elsner.in, Akriti, Elsner Technologies
+akshata.bhandare@windmill.ch, Akshata, Windmill
+albino@pixis.ai, Albino, Pyxis One
+allwyn.r@qbrainx.com, Allwyn, QBrainX Inc
+alok.singh@recro.io, Alok, Recro
+alok.kumar@vfislk.com, Alok, VFI SLK
+alwyn.barretto@infrasofttech.com, Alwyn, Infrasoft Technologies
+aman.khan@areteanstech.com, Aman, Areteans
+amandeep.k@antiersolutions.com, Amandeep, Antier Solutions
+amar.sinha@nitorinfotech.com, Amar, Nitor Infotech
+ambrish.kanungo@beyondkey.com, Ambrish, Beyond Key
+amiit.avaasthi@altudo.co, Amiit, Altudo
+amit.malhotra@wundermanthompson.com, Amit, Wunderman Thompson MSC
+amit@hanu.com, Amit, Hanu Software
+amit.prayagi@claimgenius.com, Amit, Claim Genius
+amit.ranjan@scikey.ai, Amit, SCIKEY
+amit.sahoo@areteanstech.com, Amit, Areteans
+ashital@svam.com, Amita, SVAM International
+amitesh.verma@cheersin.com, Amitesh, Cheers Interactive
+amitha.k@secure-24.com, Amitha, Secure-24
+amlan.nag@mjunction.in, Amlan, mjunction services
+amreshm@zendrive.com, Amresh, Zendrive
+akishore@dimagi.com, Amrita, Dimagi
+amrita.cheema@loconav.com, Amrita, LocoNav
+amrita.singh@cogentinfo.com, Amrita, COGENT Infotech
+amrita.singh@itbd.net, Amrita, IT BY DESIGN
+amrita@sdnaglobal.com, Amrita, Stanley David and Associates
+amritesh.shukla@mygate.com, Amritesh, MyGate
+amruta@greatplaceitservices.com, Amruta, Great Place IT Services
+amulya.ms@utthunga.com, Amulya, Utthunga
+anand.christopher@grassrootsbpo.com, Anand, Grassroots
+anand.e@increff.com, Anand, Increff
+ak@8kmiles.com, Anand, SecureKloud Technologies
+anandk@pharmarack.com, Anand, Pharmarack
+anand.r@whatarage.com, Anand, ADK Rage
+anand@hubilo.com, Anand, Hubilo
+anand@auzmor.com, Anand, Auzmor
+anand@capsitech.com, Anand, Capsitech
+athiagarajan@inniveinc.com, Anand, Innive Inc
+anandhi.s@dsmsoft.com, Anandhi, DSM SOFT
+ananthram.iyer@customercentria.com, Ananthram, Customer Centria
+anrastogi@enhanceit.com, Anchal, Enhance IT
+aarasina@teksystems.com, Anchan, TEKsystems Global Services in India
+angel.mathew@delphix.com, Angel, Delphix
+anil.chandra@thoughtspot.com, Anil, ThoughtSpot
+anil.k@corestack.io, Anil, CoreStack
+anil.moturi@solugenix.com, Anil, Solugenix
+anil.pereira@visiblealpha.com, Anil, Visible Alpha
+anil.kumar@flytxt.com, Anil, Flytxt
+anil.tomar@fdsindia.co.in, Anil, Fourth Dimension Solutions
+animesh.kumar@novopay.in, Animesh, Novopay
+anindita.ranjan@3ds.com, Anindita, Dassault Systems
+anirban.chakravorty@nttdata.com, Anirban, NTT DATA
+aghosh@trimaxamericas.com, Anirban, Data Glove
+anirudhan.vasudevan@replicon.com, Anirudhan, Replicon
+anish.ahmed@vaave.com, Anish, Vaave
+anish.raj@sentieo.com, Anish, Sentieo
+anita.mourya@capricot.com, Anita, Capricot Technologies
+anoronha@shorewise.com, Anita, ShoreWise Consulting
+asidhwani@cleo.com, Anita, Cleo

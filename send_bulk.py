@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """
 FIZI Bulk Email Automation Tool
 -------------------------------
@@ -42,8 +42,8 @@ BASE_DIR = Path(__file__).resolve().parent
 ENV_PATH = BASE_DIR / ".env"
 RECIPIENTS_TXT_PATH = BASE_DIR / "recipients.txt"
 HTML_TEMPLATE_PATH = BASE_DIR / "template.html"
-LOGO_PATH = BASE_DIR / "fizi_logo.png"
-DEFAULT_DECK_PATH = BASE_DIR / "FIZI ppt fin.pptx"
+TXT_TEMPLATE_PATH = BASE_DIR / "template.txt"
+DEFAULT_RESUME_PATH = BASE_DIR / "Bashetty-Sanjay.pdf"
 LOG_PATH = BASE_DIR / "sent_log.csv"
 
 # Email validation regex
@@ -80,8 +80,10 @@ def get_config():
     
     gmail_user = os.getenv("GMAIL_USER") or env_vars.get("GMAIL_USER")
     gmail_pass = os.getenv("GMAIL_APP_PASSWORD") or env_vars.get("GMAIL_APP_PASSWORD")
-    sender_name = os.getenv("SENDER_NAME") or env_vars.get("SENDER_NAME") or "FIZI Team"
-    email_subject = os.getenv("EMAIL_SUBJECT") or env_vars.get("EMAIL_SUBJECT") or "Message from {sender_name}"
+    sender_name = os.getenv("SENDER_NAME") or env_vars.get("SENDER_NAME") or "Sanjay Bashetty"
+    email_subject = os.getenv("EMAIL_SUBJECT") or env_vars.get("EMAIL_SUBJECT") or "Inquiry About Entry-Level Opportunities"
+    sender_email = os.getenv("SENDER_EMAIL") or env_vars.get("SENDER_EMAIL") or "bashettysanjay@gmail.com"
+    contact_number = os.getenv("CONTACT_NUMBER") or env_vars.get("CONTACT_NUMBER") or "+91 9866347550"
 
     # Strip spaces from 16-character app password if present
     if gmail_pass:
@@ -91,8 +93,11 @@ def get_config():
         "user": gmail_user,
         "password": gmail_pass,
         "sender_name": sender_name,
-        "default_subject": email_subject
+        "default_subject": email_subject,
+        "sender_email": sender_email,
+        "contact_number": contact_number
     }
+
 
 
 def load_recipients_txt(txt_path: Path):
@@ -102,13 +107,14 @@ def load_recipients_txt(txt_path: Path):
         return []
 
     recipients = []
-    with open(txt_path, mode="r", encoding="utf-8") as f:
+    with open(txt_path, mode="r", encoding="utf-8-sig") as f:
         for line_num, line in enumerate(f, start=1):
             line = line.strip()
             if not line or line.startswith("#"):
                 continue
 
             name = ""
+            company = ""
             custom_note = ""
             email = ""
 
@@ -118,13 +124,15 @@ def load_recipients_txt(txt_path: Path):
                 name = angle_match.group(1).strip()
                 email = angle_match.group(2).strip()
             elif "," in line:
-                # Delimited format: email, name, custom_note
+                # Delimited format: email, name, company, custom_note
                 parts = [p.strip() for p in line.split(",")]
                 email = parts[0]
                 if len(parts) > 1:
                     name = parts[1]
                 if len(parts) > 2:
-                    custom_note = ",".join(parts[2:]).strip()
+                    company = parts[2]
+                if len(parts) > 3:
+                    custom_note = ",".join(parts[3:]).strip()
             else:
                 email = line
 
@@ -139,6 +147,7 @@ def load_recipients_txt(txt_path: Path):
             recipients.append({
                 "email": email,
                 "name": name,
+                "company": company,
                 "custom_note": custom_note
             })
 
@@ -197,46 +206,38 @@ def format_template(template_str: str, data: dict) -> str:
     return re.sub(r"\{([a-zA-Z0-9_]+)\}", replacer, template_str)
 
 
-def create_message(sender_email, sender_name, recipient_email, subject, body_txt, body_html, attachment_path=None, logo_path=None):
-    """Build an email message with embedded inline logo and optional attachments."""
+def create_message(sender_email, sender_name, recipient_email, subject, body_txt, body_html, attachment_path=None):
+    """Build an email message with plain-text fallback, HTML body, and optional file attachment."""
     if attachment_path and Path(attachment_path).exists():
         root_msg = MIMEMultipart("mixed")
-        related_part = MIMEMultipart("related")
-        root_msg.attach(related_part)
+        alt_part = MIMEMultipart("alternative")
+        root_msg.attach(alt_part)
     else:
-        root_msg = MIMEMultipart("related")
-        related_part = root_msg
+        root_msg = MIMEMultipart("alternative")
+        alt_part = root_msg
 
     root_msg["From"] = f"{sender_name} <{sender_email}>"
     root_msg["To"] = recipient_email
     root_msg["Subject"] = subject
 
-    # Alternative text & HTML
-    alt_part = MIMEMultipart("alternative")
+    # Alternative plain-text & HTML
     if body_txt:
         alt_part.attach(MIMEText(body_txt, "plain", "utf-8"))
     if body_html:
         alt_part.attach(MIMEText(body_html, "html", "utf-8"))
-    related_part.attach(alt_part)
-
-    # Inline Logo (<img src="cid:fizi_logo">)
-    if logo_path and Path(logo_path).exists():
-        with open(logo_path, "rb") as f:
-            img = MIMEImage(f.read())
-            img.add_header("Content-ID", "<fizi_logo>")
-            img.add_header("Content-Disposition", "inline", filename="fizi_logo.png")
-            related_part.attach(img)
 
     # Optional file attachment
     if attachment_path and Path(attachment_path).exists():
         filepath = Path(attachment_path)
         with open(filepath, "rb") as f:
-            part = MIMEBase("application", "octet-stream")
+            mime_sub = "pdf" if filepath.suffix.lower() == ".pdf" else "octet-stream"
+            part = MIMEBase("application", mime_sub)
             part.set_payload(f.read())
         encoders.encode_base64(part)
         part.add_header(
             "Content-Disposition",
-            f"attachment; filename= {filepath.name}",
+            "attachment",
+            filename=filepath.name,
         )
         root_msg.attach(part)
 
@@ -259,17 +260,18 @@ def append_log(recipient_email, status, message=""):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="FIZI Automated Bulk Email Sender")
+    parser = argparse.ArgumentParser(description="Auto_Mail Automated Bulk Email Dispatcher")
     parser.add_argument("--dry-run", action="store_true", help="Preview generated emails without sending.")
     parser.add_argument("--test", type=str, metavar="EMAIL", help="Send a single test email to the specified address.")
     parser.add_argument("--file", type=str, help="Path to recipients file (.txt or .csv). Defaults to recipients.txt (if present) or recipients.csv.")
     parser.add_argument("--delay", type=float, default=2.0, help="Delay in seconds between sends (default: 2.0s).")
     parser.add_argument("--attach", type=str, help="Path to a file to attach to every email.")
     parser.add_argument("--subject", type=str, help="Override subject line.")
+    parser.add_argument("--yes", "-y", action="store_true", help="Skip confirmation prompt and start dispatch immediately.")
     args = parser.parse_args()
 
     print("=" * 60)
-    print("  FIZI Bulk Email Automation Tool")
+    print("  Auto_Mail Bulk Email Dispatcher")
     print("=" * 60)
 
     # 1. Load Configurations
@@ -291,23 +293,49 @@ def main():
     raw_txt = ""
     if HTML_TEMPLATE_PATH.exists():
         raw_html = HTML_TEMPLATE_PATH.read_text(encoding="utf-8")
-        # Generate clean plain-text fallback by removing style blocks and tags
-        clean_text = re.sub(r"(?is)<style.*?>.*?</style>", "", raw_html)
+
+    if TXT_TEMPLATE_PATH.exists():
+        raw_txt = TXT_TEMPLATE_PATH.read_text(encoding="utf-8")
+    elif raw_html:
+        # Generate clean plain-text fallback by removing style, script, title blocks and tags
+        clean_text = re.sub(r"(?is)<(title|style|script).*?>.*?</\1>", "", raw_html)
+        clean_text = re.sub(r"&nbsp;", " ", clean_text)
         clean_text = re.sub(r"<[^>]+>", "", clean_text)
         raw_txt = re.sub(r"\n\s*\n+", "\n\n", clean_text).strip()
 
-    if not raw_html:
-        print("Error: No template found. Please create template.html")
+    if not raw_html and not raw_txt:
+        print("Error: No template found. Please create template.html or template.txt")
         sys.exit(1)
 
     subject_template = args.subject or config["default_subject"]
 
-    # Determine attachment (custom --attach or default FIZI pitch deck)
+    # Determine attachment (custom --attach or default resume PDF)
     attachment_path = None
     if args.attach:
         attachment_path = args.attach
-    elif DEFAULT_DECK_PATH.exists():
-        attachment_path = str(DEFAULT_DECK_PATH)
+    elif DEFAULT_RESUME_PATH.exists():
+        attachment_path = str(DEFAULT_RESUME_PATH)
+
+    def build_context(rec_data):
+        ctx = {
+            "sender_name": config["sender_name"],
+            "sender_email": config.get("sender_email", "bashettysanjay@gmail.com"),
+            "contact_number": config.get("contact_number", "+91 9866347550"),
+            "name": "Hiring Team",
+            "company": "",
+            "custom_note": "",
+            **rec_data
+        }
+        if not ctx.get("name") or str(ctx.get("name")).strip().lower() in ("", "there", "none"):
+            ctx["name"] = "Hiring Team"
+
+        company = str(ctx.get("company", "")).strip()
+        if company and company.lower() not in ("", "none"):
+            ctx["company_phrase"] = f"at {company}"
+        else:
+            ctx["company_phrase"] = "in your organization"
+
+        return ctx
 
     # 3. Handle Test Mode
     if args.test:
@@ -318,14 +346,14 @@ def main():
 
         print(f"\n[Mode: Single Test Email] Target: {test_email}")
         if attachment_path:
-            print(f"Attached Deck: {Path(attachment_path).name}")
+            print(f"Attachment: {Path(attachment_path).name}")
 
-        test_data = {
+        test_data = build_context({
             "email": test_email,
-            "name": "Tester",
-            "custom_note": "This is a test run to verify the layout and delivery.",
-            "sender_name": config["sender_name"]
-        }
+            "name": "Recruiter",
+            "company": "SourceFuse Technologies",
+            "custom_note": "This is a test run to verify the layout and delivery."
+        })
 
         subj = format_template(subject_template, test_data)
         body_h = format_template(raw_html, test_data) if raw_html else None
@@ -338,8 +366,7 @@ def main():
             subj,
             body_t,
             body_h,
-            attachment_path,
-            logo_path=LOGO_PATH
+            attachment_path
         )
 
         if args.dry_run:
@@ -376,15 +403,15 @@ def main():
     # 5. Dry-run Mode
     if args.dry_run:
         print("\n--- [DRY RUN PREVIEW (First 2 Recipients)] ---")
+        if attachment_path:
+            print(f"Attachment: {Path(attachment_path).name}")
         for i, rec in enumerate(recipients[:2]):
-            context_data = {**rec, "sender_name": config["sender_name"]}
-            if "name" not in context_data or not context_data["name"]:
-                context_data["name"] = "there"
+            context_data = build_context(rec)
             preview_subject = format_template(subject_template, context_data)
             print(f"\n[#{i+1}] To: {rec.get('email')} | Subject: {preview_subject}")
             if raw_txt:
                 preview_body = format_template(raw_txt, context_data)
-                print(f"Body snippet:\n{preview_body[:200]}...")
+                print(f"Body snippet:\n{preview_body[:250]}...")
         print("\n--- [DRY RUN COMPLETE: No emails were sent] ---")
         return
 
@@ -393,12 +420,13 @@ def main():
     print(f"Recipients count: {len(recipients)}")
     print(f"Delay between sends: {args.delay}s")
     if attachment_path:
-        print(f"Attachment (Deck): {Path(attachment_path).name}")
+        print(f"Attachment: {Path(attachment_path).name}")
 
-    confirm = input("\nProceed with sending bulk emails now? [y/N]: ").strip().lower()
-    if confirm not in ("y", "yes"):
-        print("Cancelled by user. No emails were sent.")
-        return
+    if not args.yes:
+        confirm = input("\nProceed with sending bulk emails now? [y/N]: ").strip().lower()
+        if confirm not in ("y", "yes"):
+            print("Cancelled by user. No emails were sent.")
+            return
 
     # 7. Connect and Send Bulk Emails
     print("\nConnecting to Gmail SMTP server...")
@@ -418,11 +446,7 @@ def main():
 
         for idx, rec in enumerate(recipients, start=1):
             rec_email = rec["email"]
-            context_data = {**rec, "sender_name": config["sender_name"]}
-            if "name" not in context_data or not context_data["name"]:
-                context_data["name"] = "there"
-            if "custom_note" not in context_data:
-                context_data["custom_note"] = ""
+            context_data = build_context(rec)
 
             subject = format_template(subject_template, context_data)
             body_h = format_template(raw_html, context_data) if raw_html else None
@@ -435,8 +459,7 @@ def main():
                 subject=subject,
                 body_txt=body_t,
                 body_html=body_h,
-                attachment_path=attachment_path,
-                logo_path=LOGO_PATH
+                attachment_path=attachment_path
             )
 
             try:
