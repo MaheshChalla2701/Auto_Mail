@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FIZI — AI Fitness Platform</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f9fafb;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #1f2937;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .email-wrapper {
+      width: 100%;
+      background-color: #f9fafb;
+      padding: 40px 16px;
+    }
+    .email-container {
+      max-width: 580px;
+      margin: 0 auto;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 44px 48px;
+    }
+
+    /* Logo Header */
+    .header {
+      margin-bottom: 32px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #f3f4f6;
+    }
+    .logo-img {
+      height: 38px;
+      width: auto;
+      display: block;
+      border: 0;
+    }
+
+    /* Body Text */
+    .content {
+      font-size: 15px;
+      line-height: 1.72;
+      color: #374151;
+    }
+    .content p {
+      margin: 0 0 18px 0;
+    }
+    .content strong {
+      color: #111827;
+      font-weight: 600;
+    }
+
+    /* Subtle Callout */
+    .vision-callout {
+      background: #f8fafc;
+      border-left: 3px solid #0284c7;
+      padding: 14px 18px;
+      margin: 22px 0;
+      border-radius: 0 8px 8px 0;
+      font-size: 14.5px;
+      line-height: 1.68;
+      color: #334155;
+    }
+
+    /* Bullet List */
+    .features-list {
+      margin: 16px 0 22px 0;
+      padding-left: 20px;
+    }
+    .features-list li {
+      margin-bottom: 9px;
+      font-size: 14.5px;
+      line-height: 1.65;
+      color: #4b5563;
+    }
+    .features-list li strong {
+      color: #111827;
+    }
+
+    /* Play Store & Deck Badges */
+    .notice-card {
+      background-color: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin: 22px 0;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #4b5563;
+    }
+    .app-link {
+      display: inline-flex;
+      align-items: center;
+      color: #0284c7;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .app-link:hover {
+      text-decoration: underline;
+    }
+
+    /* CTA Button */
+    .cta-container {
+      margin: 26px 0 10px 0;
+    }
+    .cta-button {
+      display: inline-block;
+      background-color: #0f172a;
+      color: #ffffff !important;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      padding: 11px 22px;
+      border-radius: 7px;
+      letter-spacing: 0.2px;
+    }
+
+    /* Sign-off */
+    .signoff {
+      margin-top: 36px;
+      padding-top: 24px;
+      border-top: 1px solid #f3f4f6;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #6b7280;
+    }
+    .signoff-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 2px;
+    }
+    .signoff a {
+      color: #4b5563;
+      text-decoration: none;
+    }
+    .signoff a:hover {
+      color: #111827;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-wrapper">
+    <div class="email-container">
+
+      <!-- Minimal Brand Logo Header -->
+      <div class="header">
+        <img src="https://res.cloudinary.com/ddtslpjdf/image/upload/h_80,f_auto,q_auto/v1789145078/cr4bzbgtqgjcupfiytu1.png" alt="FIZI" class="logo-img" height="38" style="display: block; height: 38px; width: auto; border: 0;" />
+      </div>
+
+      <!-- Letter Body -->
+      <div class="content">
+
+        <p>Hi <strong>{name}</strong>,</p>
+
+        <p>
+          I am writing to introduce <strong>FIZI</strong> — an AI-powered fitness platform building
+          the infrastructure layer for the next generation of fitness in India.
+        </p>
+
+        <p>
+          FIZI combines <strong>real-time AI form coaching, personalized workouts, gamification,
+          nutrition guidance, and social fitness</strong> — delivered entirely through a standard
+          smartphone camera. Our computer-vision system analyzes exercise movement and provides
+          instant biomechanical feedback, making elite coaching accessible without expensive
+          hardware or personal trainers.
+        </p>
+
+        <div class="vision-callout">
+          Beyond individual coaching, we are building a <strong>decentralized gym marketplace</strong> —
+          connecting users with underutilized independent gyms, enabling discovery and booking through
+          FIZI while helping gym owners increase floor utilization and generate incremental revenue.
+        </div>
+
+        <p><strong>How our model is built to scale:</strong></p>
+
+        <ul class="features-list">
+          <li><strong>AI coaching with zero additional hardware</strong> — frictionless consumer onboarding</li>
+          <li><strong>High-margin software subscriptions</strong> — scalable recurring revenue</li>
+          <li><strong>QR-based gym-floor user acquisition</strong> — very low customer acquisition cost</li>
+          <li><strong>10–15% marketplace take rate</strong> on gym bookings and pass utilization</li>
+        </ul>
+
+        <div class="notice-card">
+          📎 <strong>Pitch Deck Attached:</strong> Our complete investor presentation is attached
+          (<code>FIZI ppt fin.pptx</code>), detailing our business model, unit economics, and growth roadmap.<br><br>
+          <strong>Live on Android:</strong> FIZI is currently live on
+          <a href="https://play.google.com/store/apps/details?id=com.maheshchalla.fizi" class="app-link" target="_blank">
+            Google Play Store &rarr;
+          </a>
+        </div>
+
+        <p>
+          If our vision and idea resonate with you, I would be delighted to have 15–20 minutes of your valuable time to share more about what we’re building, our progress so far, and explore the opportunity for a meaningful conversation.
+        </p>
+
+        <div class="cta-container">
+          <a href="mailto:mahesh.ch0127@gmail.com?subject=Re:%20FIZI%20Investment%20Discussion" class="cta-button">
+            Schedule a Conversation
+          </a>
+        </div>
+
+      </div>
+
+      <!-- Sign-off -->
+      <div class="signoff">
+        <div class="signoff-name">Mahesh Challa</div>
+        <div>Founder, FIZI</div>
+        <div><a href="mailto:mahesh.ch0127@gmail.com">mahesh.ch0127@gmail.com</a></div>
+        <div style="margin-top: 6px;">
+          <a href="https://play.google.com/store/apps/details?id=com.maheshchalla.fizi" style="color: #6b7280; font-size: 13px;">
+            Get FIZI on Google Play Store
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

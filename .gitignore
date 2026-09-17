@@ -1,0 +1,19 @@
+﻿# Environment variables & secrets (CRITICAL: Do NOT commit your Google App Password!)
+.env
+*.env
+!.env.example
+
+# Delivery logs & execution history
+sent_log.csv
+*.log
+
+# Python bytecode and cache
+__pycache__/
+*.py[cod]
+*.class
+
+# OS & IDE artifacts
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

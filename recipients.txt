@@ -1,0 +1,10 @@
+﻿# Recipients list
+# Supported formats (one per line):
+#   1. email@example.com
+#   2. email@example.com, First Name
+#   3. email@example.com, First Name, Custom Note
+#   4. First Name <email@example.com>
+#
+# Lines starting with # and empty lines are ignored.
+# Add your recipient emails below:
+
